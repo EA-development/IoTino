@@ -1,4 +1,4 @@
-package com.example.easynotes.controller;
+package jcbs.eadev.iotino.controller;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.easynotes.model.StatusInfo;
-import com.example.easynotes.repository.StatusInfoRepository;
+import jcbs.eadev.iotino.model.StatusInfo;
+import jcbs.eadev.iotino.repository.StatusInfoRepository;
 
 @RestController
 @RequestMapping("/api")

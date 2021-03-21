@@ -1,9 +1,9 @@
-package com.example.easynotes.repository;
+package jcbs.eadev.iotino.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.easynotes.model.StatusInfo;
+import jcbs.eadev.iotino.model.StatusInfo;
 
 @Repository
 public interface StatusInfoRepository extends JpaRepository<StatusInfo, Long> {

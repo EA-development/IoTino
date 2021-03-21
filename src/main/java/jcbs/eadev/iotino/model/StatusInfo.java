@@ -1,4 +1,4 @@
-package com.example.easynotes.model;
+package jcbs.eadev.iotino.model;
 
 import java.util.Date;
 

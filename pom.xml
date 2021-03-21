@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>easy-notes</artifactId>
+	<groupId>jcbs.eadev</groupId>
+	<artifactId>iotino</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>easy-notes</name>
-	<description>Rest API for a Simple Note Taking Application</description>
+	<name>IoTino</name>
+	<description>Server for IoTino</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

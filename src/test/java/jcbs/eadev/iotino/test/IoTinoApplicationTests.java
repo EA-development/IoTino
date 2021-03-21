@@ -1,4 +1,4 @@
-package com.example.easynotes;
+package jcbs.eadev.iotino.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,10 +7,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EasyNotesApplicationTests {
+public class IoTinoApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	public void dummy() {
 	}
 
 }
