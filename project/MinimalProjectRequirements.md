@@ -14,4 +14,6 @@
   * Daten brauchbar machen!
   * Server Absturz Schutz
   * Datenbank (BoardId, Raum, Füllstand)
+  * Server Security
 4. Status Output
+  * Benachrichtigung der Hausmeister ((Jeden Tag um 7:00 Uhr ne Email))
