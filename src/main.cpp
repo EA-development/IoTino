@@ -40,7 +40,7 @@ void loop() {
     } else {
       count--;
       Serial.println(" out of range ");
-    }
+    }a
   }
 
   std::sort(std::begin(values), std::end(values));  //sorting
