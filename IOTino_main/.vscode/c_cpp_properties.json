@@ -8,8 +8,11 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/IOTino_main/include",
-                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/IOTino_main/src",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/include",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/src",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/lib/util",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit_VL53L0X/src",
+                "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/config",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/app_trace",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/app_update",
@@ -73,6 +76,9 @@
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/fb_gfx",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/cores/esp32",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/variants/esp32",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit BusIO",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit GFX Library",
+                "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit SSD1306",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ArduinoOTA/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/AsyncUDP/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/AzureIoT/src",
@@ -100,14 +106,16 @@
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/IOTino_main/include",
-                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/IOTino_main/src",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/include",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/src",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/lib/util",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit_VL53L0X/src",
+                    "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/config",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/app_trace",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/app_update",
@@ -171,6 +179,9 @@
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/tools/sdk/include/fb_gfx",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/cores/esp32",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/variants/esp32",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit BusIO",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit GFX Library",
+                    "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit SSD1306",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ArduinoOTA/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/AsyncUDP/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/AzureIoT/src",
@@ -198,7 +209,6 @@
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                    "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
                 ]
             },
