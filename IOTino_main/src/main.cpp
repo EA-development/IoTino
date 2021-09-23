@@ -1,5 +1,6 @@
 #include <Settings.h>
 #include <Adafruit_VL53L0X.h>
+#include <EEPROM.h>
 
 //TODO disconnect recognition
 
@@ -12,6 +13,25 @@
 
 //instances
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+
+
+double map(double value, bool ir, bool percent) {
+  double full = EEPROM.readDouble(FULL+(ir?VALUE_SIZE:0))*MAP_PRECISION;
+  double low = EEPROM.readDouble(LOW_+(ir?VALUE_SIZE:0))*MAP_PRECISION;
+  double empty = EEPROM.readDouble(EMPTY+(ir?VALUE_SIZE:0))*MAP_PRECISION;
+  double min = 0*MAP_PRECISION;
+  double max = PAPER_SIZE*MAP_PRECISION;
+  value *= MAP_PRECISION;
+  /*if(value > empty)
+    return -1;*/
+  double mapped = (map(value, low, full, min, max))/(double)MAP_PRECISION;
+  if(percent)
+    mapped = mapped*100/(double)PAPER_SIZE;
+  if(percent)
+    if(mapped > 100)
+      mapped = 100;
+  return mapped;
+}
 
 void lidarInit(bool debug = true) {
   if(DEBUG) {
@@ -40,7 +60,7 @@ void lidarInit(bool debug = true) {
   }
 }
 
-double getLidarDistance(bool debug = true) {
+double getLidarDistance(bool debug = false, bool mapValue = true) {
   if(DEBUG)
     Serial.print("Lidar: \t");
   double value = centralMean([](){VL53L0X_RangingMeasurementData_t measure;lox.rangingTest(&measure, false);if(measure.RangeStatus==4)return-1;else return(int)measure.RangeMilliMeter;}, LIDAR_SAMPLES, LIDAR_AVERAGE_PERCENTAGE, -1, 5, DEBUG?"lidar out of range":"");
@@ -49,6 +69,18 @@ double getLidarDistance(bool debug = true) {
     Serial.print("distance: ");
     Serial.print(value);
     Serial.print("mm\t");
+  }
+  if(!mapValue)
+    return value;
+  double percent = map(value, false, true);
+  value = map(value, false, false);
+  if(DEBUG) {
+    Serial.print(F("mapped distance: "));
+    Serial.print(value);
+    Serial.print(F("mm\t"));
+    Serial.print(F("fill level: "));
+    Serial.print(percent);
+    Serial.print(F("%\t"));
   }
   return value;
 }
@@ -65,7 +97,7 @@ short getIrDistanceRaw() {
   return median([](){return modal([](){return analogRead(IR_ANALOG);}, IR_SAMPLES);}, IR_CYCLES);
 }
 
-short getIrDistance(bool debug = false) {
+short getIrDistance(bool debug = false, bool mapValue = true) {
   if(DEBUG)
     Serial.print(F("IR: \t"));
   int raw = getIrDistanceRaw();
@@ -74,7 +106,7 @@ short getIrDistance(bool debug = false) {
     Serial.print(raw);
     Serial.print(F("\t"));
   }
-  double value = 0;
+  double value_ = 0;
   for(int i = 0; i <= GRADE; i++) {
     double part = PART(i, raw);
     if(DEBUG && PRINT_PARTS) {
@@ -84,13 +116,138 @@ short getIrDistance(bool debug = false) {
       Serial.print(part);
       Serial.print(F("\t"));
     }
-    value+=part;
+    value_+=part;
   }
-  if(DEBUG)
+  if(DEBUG) {
     Serial.print(F("distance: "));
-    Serial.print(value);
+    Serial.print(value_);
     Serial.print(F("mm\t"));
-  return value;
+  }
+  if(!mapValue)
+    return value_;
+  double percent = map(value_, true, true);
+  value_ = map(value_, true, false);
+  if(DEBUG) {
+    Serial.print(F("mapped distance: "));
+    Serial.print(value_);
+    Serial.print(F("mm\t"));
+    Serial.print(F("fill level: "));
+    Serial.print(percent);
+    Serial.print(F("%\t"));
+  }
+  return value_;
+}
+
+void printLines() {
+  for(int i = 0; i < 10; i++)
+    Serial.println();
+}
+
+byte waitEnter() {
+  while(Serial.available())
+    Serial.read();
+  Serial.println(F("Press [enter] to continue"));
+  Serial.println(F("Press [s] to skip calibration step"));
+  Serial.println(F("Press [e] to end calibration"));
+  while(!Serial.available()&&Serial);
+  printLines();
+  String response = Serial.readString();
+  if(response == "s")
+    return 1;
+  if(response == "e")
+    return 2;
+  return 0;
+}
+
+void printCalibrationValue(String fillLevel, String sensor) {
+  Serial.print(fillLevel+F(": "));
+  Serial.print(EEPROM.readDouble((fillLevel=="full"?FULL:fillLevel=="low"?LOW_:EMPTY)+(sensor=="Ir"?VALUE_SIZE:0))); Serial.print("mm\t");
+}
+
+void printCalibrationValues(String sensor) {
+  Serial.print(sensor+F(":\t"));
+  printCalibrationValue("full", sensor);
+  printCalibrationValue("low", sensor);
+  printCalibrationValue("empty", sensor);
+  Serial.println();
+}
+
+void printCalibrationValues() {
+  Serial.println(F("current calibration values:"));
+  printCalibrationValues("Lidar");
+  printCalibrationValues("Ir");
+}
+
+bool printCalibrateState(String sensor, float complete) {
+  Serial.print(sensor+F(" calibration: "));
+  Serial.println(complete<0?"waiting":complete==0?"started":complete>=1?"finished":String((int)round((complete*100)))+"% complete");
+  if(complete >= 1)
+    return true;
+  return false;
+}
+
+void printCalibrateText(String fillLevel, String instruction, float complete) {
+  printLines();
+  Serial.println(fillLevel+F(" calibration started"));
+  Serial.println(F("this may take around 7 minutes to complete"));
+  Serial.println(F("Please do not disturb the sensors while calibrating"));
+  printCalibrateState("Lidar", complete);
+  if(!printCalibrateState("Ir   ", complete-1))
+    return;
+  printLines();
+  Serial.println(fillLevel+F(" calibration ended"));
+ }
+
+bool calibrateCycle(String fillLevel, String instruction) {
+  printCalibrationValues();
+  Serial.println();
+  Serial.print(F("Put ")); Serial.println(instruction+F(" infront of the sensors"));
+  byte response = waitEnter();
+  if(response == 1) {
+    printLines();
+    Serial.println(fillLevel+F(" calibration skiped"));
+    return false;
+  }
+  if(response == 2) {
+    printLines();
+    return true;
+  }
+  int v = 0;
+  int* i = &v;
+  double lidarValue;
+  double irValue;
+  if(!LIDAR)
+    v = 10;
+  if(LIDAR) lidarValue = /*getLidarDistance(false, false);*/centralAverage([i, fillLevel, instruction](){printCalibrateText(fillLevel, instruction, *i/10.); (*i)++;; return getLidarDistance(false, false);}, LIDAR_CALIBRATION_SAMPLES, 80);
+  if(IR) irValue = /*getIrDistance(false, false);*/modal([i, fillLevel, instruction](){printCalibrateText(fillLevel, instruction, *i/10.); (*i)++; return getIrDistance(false, false);}, IR_CALIBRATION_SAMPLES);
+  printCalibrateText(fillLevel, fillLevel, *i/10.);
+  int address = fillLevel=="full"?FULL:fillLevel=="low"?LOW_:EMPTY;
+  if(LIDAR) EEPROM.writeDouble(address, lidarValue);
+  if(IR) EEPROM.writeDouble(address+VALUE_SIZE, irValue);
+  EEPROM.commit();
+  return false;
+}
+
+void calibrate() {
+  if(!Serial)
+    return;
+  printLines();
+  Serial.println(F("Calibration Menu"));
+  printCalibrationValues();
+  Serial.println(F("enter [c] to calibrate"));
+  Serial.println(F("Press [enter] to continue"));
+  while(!Serial.available());
+  printLines();
+  if(Serial.readString() != "c")
+    return;
+  if(calibrateCycle("full", "a full roll of toilett paper")) return;
+  if(calibrateCycle("low", "a roll of toilett paper with one layer of paper left")) return;
+  if(calibrateCycle("empty", "an empty roll of toilett paper")) return;
+  EEPROM.commit();
+  printLines();
+  Serial.println(F("Calibration finished"));
+  printCalibrationValues();
+  waitEnter();
 }
 
 void setup() {
@@ -104,10 +261,13 @@ void setup() {
   }
   if(LIDAR) lidarInit(DEBUG_SETUP&&DEBUG_LIDAR);
   if(IR) irInit(DEBUG_SETUP&&DEBUG_IR);
+  Serial.print(F("EEPROM init\tEEPROM size: ")); Serial.println(EEPROM_SIZE);
+  EEPROM.begin(EEPROM_SIZE);
   if(DEBUG_SETUP&&DEBUG_CONST) {
     Serial.println(F("Setup finished"));
     Serial.println();
   }
+  calibrate();
 }
 
 void loop() {

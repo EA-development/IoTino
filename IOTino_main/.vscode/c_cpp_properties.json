@@ -10,6 +10,7 @@
             "includePath": [
                 "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/include",
                 "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/src",
+                "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                 "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/lib/util",
                 "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit_VL53L0X/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
@@ -85,7 +86,6 @@
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/DNSServer/src",
-                "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                 "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/FFat/src",
@@ -113,6 +113,7 @@
                 "path": [
                     "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/include",
                     "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/src",
+                    "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                     "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/lib/util",
                     "C:/Users/Isaja/OneDrive/Dokumente/PlatformIO/Projects/IOTino_main/IOTino_main/.pio/libdeps/esp32dev/Adafruit_VL53L0X/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
@@ -188,7 +189,6 @@
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/BluetoothSerial/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/DNSServer/src",
-                    "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/ESPmDNS/src",
                     "C:/Users/Isaja/.platformio/packages/framework-arduinoespressif32/libraries/FFat/src",

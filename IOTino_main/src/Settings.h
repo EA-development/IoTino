@@ -8,6 +8,8 @@
 //general
 #define FORCE_SERIAL true
 #define TIMECODE_FORMAT TIMECODE_FORMAT_SEPERATE
+#define MAP_PRECISION 1000
+#define PAPER_SIZE 40
 
 //debug
 #define DEBUG_GENERAL true
@@ -20,18 +22,19 @@
 
 //activation settings
 #define LIDAR true
-#define IR false
+#define IR true
 
 //LIDAR
 #define LIDAR_FORCE_INIT true
 #define LIDAR_SAMPLES 1000
 #define LIDAR_AVERAGE_PERCENTAGE 77
 #define LIDAR_VALUE_CORRECTION -30
-#define LIDAR_CALIBRATION_SAMPLES 5
+#define LIDAR_CALIBRATION_SAMPLES 1
 
 //IR
 #define IR_SAMPLES 1000
 #define IR_CYCLES 50
+#define IR_CALIBRATION_SAMPLES 10
 
 //IR mapping
 #define A0 +9.42450609268053
@@ -54,3 +57,12 @@
 #define E8 -25
 #define GRADE 8
 #define PRINT_PARTS false
+
+//EEPROM
+#define EEPROM_SIZE (FILL_LEVELS*SENSORS*VALUE_SIZE)
+#define FILL_LEVELS 3
+#define SENSORS 2
+#define VALUE_SIZE sizeof(double)
+#define FULL 0
+#define LOW_ FULL+SENSORS*VALUE_SIZE
+#define EMPTY LOW_+SENSORS*VALUE_SIZE
