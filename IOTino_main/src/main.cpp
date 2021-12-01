@@ -4,7 +4,7 @@
 
 //TODO disconnect recognition
 
-//macros
+//macross
 #define DEBUG (debug&&Serial&&DEBUG_GENERAL)
 #define DEBUG_CONST (Serial&&DEBUG_GENERAL)
 #define A(n) (n==0?A0:n==1?A1:n==2?A2:n==3?A3:n==4?A4:n==5?A5:n==6?A6:n==7?A7:n==8?A8:0)
