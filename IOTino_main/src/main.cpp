@@ -146,12 +146,12 @@ void printLines() {
 byte waitEnter() {
   while(Serial.available())
     Serial.read();
-  Serial.println(F("Press [enter] to continue"));
-  Serial.println(F("Press [s] to skip calibration step"));
-  Serial.println(F("Press [e] to end calibration"));
+    Serial.println(F("Press [enter] to continue"));
+    Serial.println(F("Press [s] to skip calibration step"));
+    Serial.println(F("Press [e] to end calibration"));
   while(!Serial.available()&&Serial);
-  printLines();
-  String response = Serial.readString();
+    printLines();
+    String response = Serial.readString();
   if(response == "s")
     return 1;
   if(response == "e")
@@ -224,7 +224,7 @@ bool calibrateCycle(String fillLevel, String instruction) {
   int address = fillLevel=="full"?FULL:fillLevel=="low"?LOW_:EMPTY;
   if(LIDAR) EEPROM.writeDouble(address, lidarValue);
   if(IR) EEPROM.writeDouble(address+VALUE_SIZE, irValue);
-  EEPROM.commit();
+    EEPROM.commit();
   return false;
 }
 
