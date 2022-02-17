@@ -34,6 +34,8 @@ double _map(double value, bool ir, bool percent) {
 
 #include <Mail.h>
 
+int testInt = 0;
+
 void lidarInit(bool debug = true) {
   if(DEBUG) {
     Serial.println();
@@ -270,6 +272,7 @@ void setup() {
     Serial.println();
   }
   calibrate();
+  
 }
 
 void loop() {
@@ -281,6 +284,10 @@ void loop() {
   if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
   if(lidarDistance >= 15){
     Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
+  } 
+  if(testInt == 0){
+    Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
+    testInt = 1;
   } 
   if(DEBUG_CONST)
     Serial.println();

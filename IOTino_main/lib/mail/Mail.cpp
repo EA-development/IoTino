@@ -1,4 +1,5 @@
 #include "Mail.h"
+#include <string>
 
 
 SMTPSession smtp;
@@ -15,7 +16,7 @@ bool Mail::sendMail(double lidar,double ir){
   //Serial.begin(115200);
   //Serial.println();
   //Serial.print("Connecting to AP");
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD); //probably better in a setup function
   while (WiFi.status() != WL_CONNECTED){
     //Serial.print(".");
     delay(200);
@@ -31,7 +32,7 @@ bool Mail::sendMail(double lidar,double ir){
    * none debug or 0
    * basic debug or 1
   */
-  smtp.debug(1);
+  smtp.debug(0);
 
   /* Set the callback function to get the sending results */
   smtp.callback(smtpCallback);
@@ -65,7 +66,8 @@ bool Mail::sendMail(double lidar,double ir){
   
   */
   //Send raw text message
-  String textMsg = "Fake Papierspender hat einen Füllstand von:" + round(lidar) + "(Lidar)" + round(ir) + "(IR)";
+  
+  String textMsg = "Fake Papierspender hat einen Füllstand von:" + String(lidar) + "(Lidar)" + (String) ir + "(IR)";
   message.text.content = textMsg.c_str();
   message.text.charSet = "us-ascii";
   message.text.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
