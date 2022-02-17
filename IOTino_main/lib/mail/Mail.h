@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESP_Mail_Client.h>
+#include <cmath>
 
 
 #define WIFI_SSID "JCBS-Schüler"
@@ -21,8 +22,8 @@
 
 class Mail {
     public:
-    
-    static String sendMail(int value);
+    static bool sendMail(double lidar, double ir);
+
     private:
     
 };

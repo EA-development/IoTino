@@ -10,21 +10,22 @@ SMTPSession smtp;
 /* Callback function to get the Email sending status */
 void smtpCallback(SMTP_Status status);
 
-String Mail::sendMail(int value){
+bool Mail::sendMail(double lidar,double ir){
 
-  Serial.begin(115200);
-  Serial.println();
-  Serial.print("Connecting to AP");
+  //Serial.begin(115200);
+  //Serial.println();
+  //Serial.print("Connecting to AP");
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED){
-    Serial.print(".");
+    //Serial.print(".");
     delay(200);
   }
-  Serial.println("");
+  /*Serial.println("");
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.println();
+  */
 
   /** Enable the debug via Serial port
    * none debug or 0
@@ -50,7 +51,7 @@ String Mail::sendMail(int value){
   /* Set the message headers */
   message.sender.name = "IoTino";
   message.sender.email = AUTHOR_EMAIL;
-  message.subject = "Papierstatus:" + value;
+  message.subject = "Papierstatus!";
   message.addRecipient("Hausmeister", RECIPIENT_EMAIL);
 
   
@@ -64,7 +65,7 @@ String Mail::sendMail(int value){
   
   */
   //Send raw text message
-  String textMsg = "Papier ha teinen Füllstand von:" + value;
+  String textMsg = "Fake Papierspender hat einen Füllstand von:" + round(lidar) + "(Lidar)" + round(ir) + "(IR)";
   message.text.content = textMsg.c_str();
   message.text.charSet = "us-ascii";
   message.text.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
@@ -77,26 +78,26 @@ String Mail::sendMail(int value){
 
   /* Connect to server with the session config */
   if (!smtp.connect(&session))
-    return "Mail sent";
+    return true;
 
   /* Start sending Email and close the session */
   if (!MailClient.sendMail(&smtp, &message))
-    Serial.println("Error sending Email, " + smtp.errorReason());
-    return "Error sending Mail";
+    //Serial.println("Error sending Email, " + smtp.errorReason());
+    return false;
 }
 
 
 /* Callback function to get the Email sending status */
 void smtpCallback(SMTP_Status status){
   /* Print the current status */
-  Serial.println(status.info());
+  //Serial.println(status.info());
 
   /* Print the sending result */
   if (status.success()){
-    Serial.println("----------------");
-    ESP_MAIL_PRINTF("Message sent success: %d\n", status.completedCount());
-    ESP_MAIL_PRINTF("Message sent failled: %d\n", status.failedCount());
-    Serial.println("----------------\n");
+    //Serial.println("----------------");
+    //ESP_MAIL_PRINTF("Message sent success: %d\n", status.completedCount());
+    //ESP_MAIL_PRINTF("Message sent failled: %d\n", status.failedCount());
+    //Serial.println("----------------\n");
     struct tm dt;
 
     for (size_t i = 0; i < smtp.sendingResult.size(); i++){
@@ -105,12 +106,13 @@ void smtpCallback(SMTP_Status status){
       time_t ts = (time_t)result.timestamp;
       localtime_r(&ts, &dt);
 
-      ESP_MAIL_PRINTF("Message No: %d\n", i + 1);
+      /*ESP_MAIL_PRINTF("Message No: %d\n", i + 1);
       ESP_MAIL_PRINTF("Status: %s\n", result.completed ? "success" : "failed");
       ESP_MAIL_PRINTF("Date/Time: %d/%d/%d %d:%d:%d\n", dt.tm_year + 1900, dt.tm_mon + 1, dt.tm_mday, dt.tm_hour, dt.tm_min, dt.tm_sec);
       ESP_MAIL_PRINTF("Recipient: %s\n", result.recipients);
       ESP_MAIL_PRINTF("Subject: %s\n", result.subject);
+      */
     }
-    Serial.println("----------------\n");
+    //Serial.println("----------------\n");
   }
 }

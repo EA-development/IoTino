@@ -1,8 +1,7 @@
 #include <Settings.h>
 #include <Adafruit_VL53L0X.h>
 #include <EEPROM.h>
-
-//TODO disconnect recognition
+#include "Arduino.h"
 
 //macros
 #define DEBUG (debug&&Serial&&DEBUG_GENERAL)
@@ -10,12 +9,12 @@
 #define A(n) (n==0?A0:n==1?A1:n==2?A2:n==3?A3:n==4?A4:n==5?A5:n==6?A6:n==7?A7:n==8?A8:0)
 #define E(n) (n==0?E0:n==1?E1:n==2?E2:n==3?E3:n==4?E4:n==5?E5:n==6?E6:n==7?E7:n==8?E8:0)
 #define PART(n, x) (A(n)*pow(10, E(n))*pow(x, n))
+#define MIN_PAPER_THICKNES 10
 
 //instances
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
-
-double map(double value, bool ir, bool percent) {
+double _map(double value, bool ir, bool percent) {
   double full = EEPROM.readDouble(FULL+(ir?VALUE_SIZE:0))*MAP_PRECISION;
   double low = EEPROM.readDouble(LOW_+(ir?VALUE_SIZE:0))*MAP_PRECISION;
   double empty = EEPROM.readDouble(EMPTY+(ir?VALUE_SIZE:0))*MAP_PRECISION;
@@ -32,6 +31,8 @@ double map(double value, bool ir, bool percent) {
       mapped = 100;
   return mapped;
 }
+
+#include <Mail.h>
 
 void lidarInit(bool debug = true) {
   if(DEBUG) {
@@ -72,8 +73,8 @@ double getLidarDistance(bool debug = false, bool mapValue = true) {
   }
   if(!mapValue)
     return value;
-  double percent = map(value, false, true);
-  value = map(value, false, false);
+  double percent = _map(value, false, true);
+  value = _map(value, false, false);
   if(DEBUG) {
     Serial.print(F("mapped distance: "));
     Serial.print(value);
@@ -125,8 +126,8 @@ short getIrDistance(bool debug = false, bool mapValue = true) {
   }
   if(!mapValue)
     return value_;
-  double percent = map(value_, true, true);
-  value_ = map(value_, true, false);
+  double percent = _map(value_, true, true);
+  value_ = _map(value_, true, false);
   if(DEBUG) {
     Serial.print(F("mapped distance: "));
     Serial.print(value_);
@@ -253,6 +254,7 @@ void calibrate() {
 void setup() {
   Serial.begin(115200);
   // wait until serial port opens for native USB devices
+  Serial.println(Mail::sendMail(1,2));
   while (!Serial && FORCE_SERIAL)
     delay(1);
   if(DEBUG_SETUP&&DEBUG_CONST) {
@@ -273,8 +275,13 @@ void setup() {
 void loop() {
   if(DEBUG_TIMECODE)
     printTimeCode(TIMECODE_FORMAT);
-  if(LIDAR) getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
-  if(IR) getIrDistance(DEBUG_VALUES&&DEBUG_IR);
+  double lidarDistance = -1;
+  double irDistance = -1;
+  if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
+  if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
+  if(lidarDistance >= 15){
+    Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
+  } 
   if(DEBUG_CONST)
     Serial.println();
 }
