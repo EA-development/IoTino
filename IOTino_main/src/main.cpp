@@ -256,7 +256,7 @@ void calibrate() {
 void setup() {
   Serial.begin(115200);
   // wait until serial port opens for native USB devices
-  Serial.println(Mail::sendMail(1,2));
+  Mail::setup();
   while (!Serial && FORCE_SERIAL)
     delay(1);
   if(DEBUG_SETUP&&DEBUG_CONST) {
@@ -273,9 +273,12 @@ void setup() {
   }
   calibrate();
   
+  
 }
 
 void loop() {
+  Serial.println(Mail::sendMail(1,2));
+  return;
   if(DEBUG_TIMECODE)
     printTimeCode(TIMECODE_FORMAT);
   double lidarDistance = -1;
@@ -285,10 +288,10 @@ void loop() {
   if(lidarDistance >= 15){
     Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
   } 
-  if(testInt == 0){
+  /* if(testInt == 0){
     Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
     testInt = 1;
-  } 
+   }*/ 
   if(DEBUG_CONST)
     Serial.println();
 }

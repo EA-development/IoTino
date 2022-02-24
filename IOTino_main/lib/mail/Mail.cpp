@@ -3,6 +3,9 @@
 
 
 SMTPSession smtp;
+ESP_Mail_Session Mail::session;
+SMTP_Message Mail::message;
+
 
  //https://myaccount.google.com/lesssecureapps?pli=1
 /* The SMTP Session object used for Email sending */
@@ -11,9 +14,8 @@ SMTPSession smtp;
 /* Callback function to get the Email sending status */
 void smtpCallback(SMTP_Status status);
 
-bool Mail::sendMail(double lidar,double ir){
-
-  //Serial.begin(115200);
+void Mail::setup() {
+ //Serial.begin(115200);
   //Serial.println();
   //Serial.print("Connecting to AP");
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD); //probably better in a setup function
@@ -21,23 +23,22 @@ bool Mail::sendMail(double lidar,double ir){
     //Serial.print(".");
     delay(200);
   }
-  /*Serial.println("");
+  Serial.println("");
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.println();
-  */
-
+  
   /** Enable the debug via Serial port
    * none debug or 0
    * basic debug or 1
   */
-  smtp.debug(0);
+  smtp.debug(1);
 
   /* Set the callback function to get the sending results */
   smtp.callback(smtpCallback);
-  /* Declare the session config data */
-  ESP_Mail_Session session;
+
+   /* Declare the session config data */
 
   /* Set the session config */
   session.server.host_name = SMTP_HOST;
@@ -47,7 +48,6 @@ bool Mail::sendMail(double lidar,double ir){
   session.login.user_domain = "";
 
   /* Declare the message class */
-  SMTP_Message message;
 
   /* Set the message headers */
   message.sender.name = "IoTino";
@@ -67,8 +67,6 @@ bool Mail::sendMail(double lidar,double ir){
   */
   //Send raw text message
   
-  String textMsg = "Fake Papierspender hat einen Füllstand von:" + String(lidar) + "(Lidar)" + (String) ir + "(IR)";
-  message.text.content = textMsg.c_str();
   message.text.charSet = "us-ascii";
   message.text.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
 
@@ -77,15 +75,29 @@ bool Mail::sendMail(double lidar,double ir){
 
   /* Set the custom message header */
   //message.addHeader("Message-ID: <abcde.fghij@gmail.com>");
+  if (!smtp.connect(&session)) {
+    Serial.println("NO session!!!!");
+    // return false;
+  }
 
+}
+
+bool Mail::sendMail(double lidar,double ir){
+   
+String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "cm (Lidar) " + (String) ir + "cm (IR)";
+  message.text.content = textMsg.c_str();
   /* Connect to server with the session config */
-  if (!smtp.connect(&session))
-    return true;
-
+  Serial.println("start sending");
+  unsigned long benchmark = millis();
   /* Start sending Email and close the session */
-  if (!MailClient.sendMail(&smtp, &message))
-    //Serial.println("Error sending Email, " + smtp.errorReason());
+  if (!MailClient.sendMail(&smtp, &message)) {
+    Serial.println("Error sending Email, " + smtp.errorReason());
     return false;
+  }
+  benchmark = millis()-benchmark;
+  Serial.println(benchmark);
+  Serial.println("end sending");
+
 }
 
 

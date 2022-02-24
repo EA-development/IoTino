@@ -14,7 +14,7 @@
 
 /* The sign in credentials */
 #define AUTHOR_EMAIL "isajah.tappe@gmail.com"
-#define AUTHOR_PASSWORD "qwertz777"
+#define AUTHOR_PASSWORD "KoenigsKind777"
 /* Recipient's email*/
 #define RECIPIENT_EMAIL "jonas.na.braun@web.de"
 #define RECIPIENT_EMAIL_TWO "hausmeister@jcbs.de"
@@ -22,9 +22,13 @@
 
 class Mail {
     public:
+    static void setup();
     static bool sendMail(double lidar, double ir);
 
     private:
+    static ESP_Mail_Session session;
+    static SMTP_Message message;
+
     
 };
 
