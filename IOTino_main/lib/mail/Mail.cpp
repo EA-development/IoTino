@@ -7,6 +7,9 @@ ESP_Mail_Session Mail::session;
 SMTP_Message Mail::message;
 
 
+
+
+
  //https://myaccount.google.com/lesssecureapps?pli=1
 /* The SMTP Session object used for Email sending */
 
@@ -98,6 +101,8 @@ String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "
   Serial.println(benchmark);
   Serial.println("end sending");
 
+  int value = session.time.ntp_server;
+
 }
 
 
@@ -129,4 +134,8 @@ void smtpCallback(SMTP_Status status){
     }
     //Serial.println("----------------\n");
   }
+  
 }
+int getTime(){
+    int teset = ESPTimeHelper
+  }

@@ -277,8 +277,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(Mail::sendMail(1,2));
-  return;
   if(DEBUG_TIMECODE)
     printTimeCode(TIMECODE_FORMAT);
   double lidarDistance = -1;
@@ -286,12 +284,10 @@ void loop() {
   if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
   if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
   if(lidarDistance >= 15){
-    Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
+    if(! Mail::sendMail(lidarDistance,irDistance)){
+      
+    } // send Mail with values 
   } 
-  /* if(testInt == 0){
-    Mail::sendMail(lidarDistance,irDistance); // send Mail with values 
-    testInt = 1;
-   }*/ 
   if(DEBUG_CONST)
     Serial.println();
 }
