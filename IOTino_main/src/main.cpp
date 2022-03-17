@@ -1,21 +1,20 @@
 #include <Settings.h>
 #include <Adafruit_VL53L0X.h>
 #include <EEPROM.h>
+#include "Arduino.h"
 
-//TODO disconnect recognition
-
-//macros
+//macross
 #define DEBUG (debug&&Serial&&DEBUG_GENERAL)
 #define DEBUG_CONST (Serial&&DEBUG_GENERAL)
 #define A(n) (n==0?A0:n==1?A1:n==2?A2:n==3?A3:n==4?A4:n==5?A5:n==6?A6:n==7?A7:n==8?A8:0)
 #define E(n) (n==0?E0:n==1?E1:n==2?E2:n==3?E3:n==4?E4:n==5?E5:n==6?E6:n==7?E7:n==8?E8:0)
 #define PART(n, x) (A(n)*pow(10, E(n))*pow(x, n))
+#define MIN_PAPER_THICKNES 10
 
 //instances
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
-
-double map(double value, bool ir, bool percent) {
+double _map(double value, bool ir, bool percent) {
   double full = EEPROM.readDouble(FULL+(ir?VALUE_SIZE:0))*MAP_PRECISION;
   double low = EEPROM.readDouble(LOW_+(ir?VALUE_SIZE:0))*MAP_PRECISION;
   double empty = EEPROM.readDouble(EMPTY+(ir?VALUE_SIZE:0))*MAP_PRECISION;
@@ -32,6 +31,10 @@ double map(double value, bool ir, bool percent) {
       mapped = 100;
   return mapped;
 }
+
+#include <Mail.h>
+
+int testInt = 0;
 
 void lidarInit(bool debug = true) {
   if(DEBUG) {
@@ -72,8 +75,8 @@ double getLidarDistance(bool debug = false, bool mapValue = true) {
   }
   if(!mapValue)
     return value;
-  double percent = map(value, false, true);
-  value = map(value, false, false);
+  double percent = _map(value, false, true);
+  value = _map(value, false, false);
   if(DEBUG) {
     Serial.print(F("mapped distance: "));
     Serial.print(value);
@@ -125,8 +128,8 @@ short getIrDistance(bool debug = false, bool mapValue = true) {
   }
   if(!mapValue)
     return value_;
-  double percent = map(value_, true, true);
-  value_ = map(value_, true, false);
+  double percent = _map(value_, true, true);
+  value_ = _map(value_, true, false);
   if(DEBUG) {
     Serial.print(F("mapped distance: "));
     Serial.print(value_);
@@ -146,12 +149,12 @@ void printLines() {
 byte waitEnter() {
   while(Serial.available())
     Serial.read();
-  Serial.println(F("Press [enter] to continue"));
-  Serial.println(F("Press [s] to skip calibration step"));
-  Serial.println(F("Press [e] to end calibration"));
+    Serial.println(F("Press [enter] to continue"));
+    Serial.println(F("Press [s] to skip calibration step"));
+    Serial.println(F("Press [e] to end calibration"));
   while(!Serial.available()&&Serial);
-  printLines();
-  String response = Serial.readString();
+    printLines();
+    String response = Serial.readString();
   if(response == "s")
     return 1;
   if(response == "e")
@@ -224,7 +227,7 @@ bool calibrateCycle(String fillLevel, String instruction) {
   int address = fillLevel=="full"?FULL:fillLevel=="low"?LOW_:EMPTY;
   if(LIDAR) EEPROM.writeDouble(address, lidarValue);
   if(IR) EEPROM.writeDouble(address+VALUE_SIZE, irValue);
-  EEPROM.commit();
+    EEPROM.commit();
   return false;
 }
 
@@ -253,6 +256,7 @@ void calibrate() {
 void setup() {
   Serial.begin(115200);
   // wait until serial port opens for native USB devices
+  Mail::setup();
   while (!Serial && FORCE_SERIAL)
     delay(1);
   if(DEBUG_SETUP&&DEBUG_CONST) {
@@ -268,13 +272,22 @@ void setup() {
     Serial.println();
   }
   calibrate();
+  
+  
 }
 
 void loop() {
   if(DEBUG_TIMECODE)
     printTimeCode(TIMECODE_FORMAT);
-  if(LIDAR) getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
-  if(IR) getIrDistance(DEBUG_VALUES&&DEBUG_IR);
+  double lidarDistance = -1;
+  double irDistance = -1;
+  if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
+  if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
+  if(lidarDistance >= 15){
+    if(! Mail::sendMail(lidarDistance,irDistance)){
+      
+    } // send Mail with values 
+  } 
   if(DEBUG_CONST)
     Serial.println();
 }

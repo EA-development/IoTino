@@ -14,15 +14,15 @@
 //debug
 #define DEBUG_GENERAL true
 #define DEBUG_SETUP true
-#define DEBUG_TIMECODE true
-#define DEBUG_VALUES true
+#define DEBUG_TIMECODE false
+#define DEBUG_VALUES false
 #define DEBUG_ERROR true
-#define DEBUG_LIDAR true
-#define DEBUG_IR true
+#define DEBUG_LIDAR false
+#define DEBUG_IR false
 
 //activation settings
-#define LIDAR true
-#define IR true
+#define LIDAR false
+#define IR false
 
 //LIDAR
 #define LIDAR_FORCE_INIT true
