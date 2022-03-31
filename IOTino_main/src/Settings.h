@@ -14,19 +14,19 @@
 //debug
 #define DEBUG_GENERAL true
 #define DEBUG_SETUP true
-#define DEBUG_TIMECODE false
-#define DEBUG_VALUES false
+#define DEBUG_TIMECODE true
+#define DEBUG_VALUES true
 #define DEBUG_ERROR true
-#define DEBUG_LIDAR false
-#define DEBUG_IR false
+#define DEBUG_LIDAR true
+#define DEBUG_IR true
 
 //activation settings
-#define LIDAR false
-#define IR false
+#define LIDAR true
+#define IR true
 
 //LIDAR
 #define LIDAR_FORCE_INIT true
-#define LIDAR_SAMPLES 1000
+#define LIDAR_SAMPLES 100
 #define LIDAR_AVERAGE_PERCENTAGE 77
 #define LIDAR_VALUE_CORRECTION -30
 #define LIDAR_CALIBRATION_SAMPLES 1

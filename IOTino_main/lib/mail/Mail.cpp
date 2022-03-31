@@ -101,7 +101,7 @@ String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "
   Serial.println(benchmark);
   Serial.println("end sending");
 
-  int value = session.time.ntp_server;
+  //int value = session.time.ntp_server;
 
 }
 
@@ -136,6 +136,7 @@ void smtpCallback(SMTP_Status status){
   }
   
 }
-int getTime(){
-    int teset = ESPTimeHelper
+/*int getTime(){
+    //int teset = ESPTimeHelper
   }
+*/

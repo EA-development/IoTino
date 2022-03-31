@@ -256,7 +256,7 @@ void calibrate() {
 void setup() {
   Serial.begin(115200);
   // wait until serial port opens for native USB devices
-  Mail::setup();
+ // Mail::setup();
   while (!Serial && FORCE_SERIAL)
     delay(1);
   if(DEBUG_SETUP&&DEBUG_CONST) {
@@ -283,9 +283,8 @@ void loop() {
   double irDistance = -1;
   if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
   if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
-  if(lidarDistance >= 15){
-    if(! Mail::sendMail(lidarDistance,irDistance)){
-      
+  if(lidarDistance >= 65 && irDistance >= 50){ //better algo needed!
+        if(! Mail::sendMail(lidarDistance,irDistance)){
     } // send Mail with values 
   } 
   if(DEBUG_CONST)
