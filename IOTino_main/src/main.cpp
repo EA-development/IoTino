@@ -9,7 +9,10 @@
 #define A(n) (n==0?A0:n==1?A1:n==2?A2:n==3?A3:n==4?A4:n==5?A5:n==6?A6:n==7?A7:n==8?A8:0)
 #define E(n) (n==0?E0:n==1?E1:n==2?E2:n==3?E3:n==4?E4:n==5?E5:n==6?E6:n==7?E7:n==8?E8:0)
 #define PART(n, x) (A(n)*pow(10, E(n))*pow(x, n))
-#define MIN_PAPER_THICKNES 10
+
+bool alert = false;
+unsigned long lastAlert = 0;
+short lastFillLevel = 0;
 
 //instances
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
@@ -63,7 +66,7 @@ void lidarInit(bool debug = true) {
   }
 }
 
-double getLidarDistance(bool debug = false, bool mapValue = true) {
+double getLidarDistance(bool debug = false, bool mapValue = true, bool inPercent = false) {
   if(DEBUG)
     Serial.print("Lidar: \t");
   double value = centralMean([](){VL53L0X_RangingMeasurementData_t measure;lox.rangingTest(&measure, false);if(measure.RangeStatus==4)return-1;else return(int)measure.RangeMilliMeter;}, LIDAR_SAMPLES, LIDAR_AVERAGE_PERCENTAGE, -1, 5, DEBUG?"lidar out of range":"");
@@ -85,7 +88,7 @@ double getLidarDistance(bool debug = false, bool mapValue = true) {
     Serial.print(percent);
     Serial.print(F("%\t"));
   }
-  return value;
+  return inPercent?(percent*100):value;
 }
 
 void irInit(bool debug = true) {
@@ -100,7 +103,7 @@ short getIrDistanceRaw() {
   return median([](){return modal([](){return analogRead(IR_ANALOG);}, IR_SAMPLES);}, IR_CYCLES);
 }
 
-short getIrDistance(bool debug = false, bool mapValue = true) {
+short getIrDistance(bool debug = false, bool mapValue = true, bool inPercent = false) {
   if(DEBUG)
     Serial.print(F("IR: \t"));
   int raw = getIrDistanceRaw();
@@ -138,7 +141,7 @@ short getIrDistance(bool debug = false, bool mapValue = true) {
     Serial.print(percent);
     Serial.print(F("%\t"));
   }
-  return value_;
+  return inPercent?(percent*100):value_;
 }
 
 void printLines() {
@@ -255,6 +258,7 @@ void calibrate() {
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("Test");
   // wait until serial port opens for native USB devices
   Mail::setup();
   while (!Serial && FORCE_SERIAL)
@@ -272,8 +276,6 @@ void setup() {
     Serial.println();
   }
   calibrate();
-  
-  
 }
 
 void loop() {
@@ -281,13 +283,17 @@ void loop() {
     printTimeCode(TIMECODE_FORMAT);
   double lidarDistance = -1;
   double irDistance = -1;
-  if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR);
-  if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR);
-  if(lidarDistance >= 15){
-    if(! Mail::sendMail(lidarDistance,irDistance)){
-      
-    } // send Mail with values 
-  } 
+  if(LIDAR) lidarDistance = getLidarDistance(DEBUG_VALUES&&DEBUG_LIDAR, true, true);
+  if(IR) irDistance = getIrDistance(DEBUG_VALUES&&DEBUG_IR, true, true);
   if(DEBUG_CONST)
     Serial.println();
+
+  if(lidarDistance <= MIN_FILL_LEVEL){
+    if(alert || (millis()-lastAlert < RESEND_TIME) || (lastFillLevel-lidarDistance < 10))
+      return;
+    alert = true;
+    lastAlert = millis();
+    lastFillLevel = lidarDistance;
+    Mail::sendMail(lidarDistance,irDistance);
+  } 
 }

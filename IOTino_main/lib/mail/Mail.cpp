@@ -20,10 +20,10 @@ void smtpCallback(SMTP_Status status);
 void Mail::setup() {
  //Serial.begin(115200);
   //Serial.println();
-  //Serial.print("Connecting to AP");
+  Serial.print("Connecting to AP");
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD); //probably better in a setup function
   while (WiFi.status() != WL_CONNECTED){
-    //Serial.print(".");
+    Serial.print(".");
     delay(200);
   }
   Serial.println("");
@@ -87,7 +87,7 @@ void Mail::setup() {
 
 bool Mail::sendMail(double lidar,double ir){
    
-String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "cm (Lidar) " + (String) ir + "cm (IR)";
+String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "% (Lidar) " + (String) ir + "% (IR)";
   message.text.content = textMsg.c_str();
   /* Connect to server with the session config */
   Serial.println("start sending");
@@ -101,8 +101,7 @@ String textMsg = "FAKE Papierspender hat einen Stand von:  " + String(lidar) + "
   Serial.println(benchmark);
   Serial.println("end sending");
 
-  int value = session.time.ntp_server;
-
+  return true;
 }
 
 
@@ -136,6 +135,6 @@ void smtpCallback(SMTP_Status status){
   }
   
 }
-int getTime(){
-    int teset = ESPTimeHelper
-  }
+// int getTime(){
+//     int time = ESPTimeHelper::getCurrentTimestamp();
+// }

@@ -9,20 +9,23 @@
 #define FORCE_SERIAL true
 #define TIMECODE_FORMAT TIMECODE_FORMAT_SEPERATE
 #define MAP_PRECISION 1000
-#define PAPER_SIZE 40
+#define PAPER_SIZE 80
+
+#define MIN_FILL_LEVEL 50
+#define RESEND_TIME  2*60*60*1000
 
 //debug
 #define DEBUG_GENERAL true
 #define DEBUG_SETUP true
-#define DEBUG_TIMECODE false
-#define DEBUG_VALUES false
+#define DEBUG_TIMECODE true
+#define DEBUG_VALUES true
 #define DEBUG_ERROR true
-#define DEBUG_LIDAR false
-#define DEBUG_IR false
+#define DEBUG_LIDAR true
+#define DEBUG_IR true
 
 //activation settings
-#define LIDAR false
-#define IR false
+#define LIDAR true
+#define IR true
 
 //LIDAR
 #define LIDAR_FORCE_INIT true

@@ -8,7 +8,7 @@
 
 
 #define WIFI_SSID "JCBS-Schüler"
-#define WIFI_PASSWORD "K1,14DWwFuwuu."
+#define WIFI_PASSWORD "S1,16DismdEn;deieKG!"
 #define SMTP_HOST "smtp.gmail.com"
 #define SMTP_PORT 465
 
